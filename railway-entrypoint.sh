@@ -23,6 +23,10 @@ echo "SetEnvIf X-Forwarded-Proto https HTTPS=on" > /etc/apache2/conf-available/r
 a2enconf railway-proxy >/dev/null 2>&1 || true
 
 # Instalação automática do Moodle se ainda não foi instalado
+# Instalação automática do Moodle se ainda não foi instalado
+ADMIN_PASS="${MOODLE_ADMIN_PASS:-IN\$0luc0#\$TI}"
+ADMIN_EMAIL="${MOODLE_ADMIN_EMAIL:-suporte@halsten.com.br}"
+
 if [ ! -f /var/www/moodledata/moodle_is_installed ]; then
   echo "Iniciando instalação automática do Moodle..."
   sudo -u www-data php /var/www/html/admin/cli/install_database.php \
@@ -30,8 +34,8 @@ if [ ! -f /var/www/moodledata/moodle_is_installed ]; then
     --fullname="Halsten Academy" \
     --shortname="halsten" \
     --adminuser=admin \
-    --adminpass="${MOODLE_ADMIN_PASS}" \
-    --adminemail="${MOODLE_ADMIN_EMAIL}" \
+    --adminpass="${ADMIN_PASS}" \
+    --adminemail="${ADMIN_EMAIL}" \
     --non-interactive \
     && touch /var/www/moodledata/moodle_is_installed \
     && echo "Moodle instalado com sucesso!"
