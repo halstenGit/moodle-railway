@@ -22,5 +22,20 @@ apache2ctl -M 2>/dev/null | grep mpm || true
 echo "SetEnvIf X-Forwarded-Proto https HTTPS=on" > /etc/apache2/conf-available/railway-proxy.conf
 a2enconf railway-proxy >/dev/null 2>&1 || true
 
+# Instalação automática do Moodle se ainda não foi instalado
+if [ ! -f /var/www/moodledata/moodle_is_installed ]; then
+  echo "Iniciando instalação automática do Moodle..."
+  sudo -u www-data php /var/www/html/admin/cli/install_database.php \
+    --agree-license \
+    --fullname="Halsten Academy" \
+    --shortname="halsten" \
+    --adminuser=admin \
+    --adminpass="${MOODLE_ADMIN_PASS}" \
+    --adminemail="${MOODLE_ADMIN_EMAIL}" \
+    --non-interactive \
+    && touch /var/www/moodledata/moodle_is_installed \
+    && echo "Moodle instalado com sucesso!"
+fi
+
 # Start the original entrypoint + Apache
 exec /usr/local/bin/moodle-docker-php-entrypoint apache2-foreground
