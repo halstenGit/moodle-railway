@@ -33,7 +33,7 @@ fi
 # Linka o config.php do volume para o Moodle
 if [ -f /var/www/moodledata/config.php ] && [ ! -f /var/www/html/config.php ]; then
   echo "Restaurando config.php do volume..."
-  cp /var/www/moodledata/config.php /var/www/html/config.php
+  cp /var/www/html/theme/halsten/config.moodle.php /var/www/moodledata/config.php
   chown www-data:www-data /var/www/html/config.php
   echo "config.php restaurado!"
 fi

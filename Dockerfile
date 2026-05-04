@@ -9,6 +9,9 @@ RUN git clone --depth 1 -b MOODLE_405_STABLE https://github.com/moodle/moodle.gi
 COPY moodle-theme/halsten /var/www/html/theme/halsten
 RUN chown -R www-data:www-data /var/www/html/theme/halsten
 
+# Copia o config.moodle.php para dentro do tema
+COPY moodle-theme/config.moodle.php /var/www/html/theme/halsten/config.moodle.php
+
 # Install and configure the runtime entrypoint
 COPY railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh
 RUN chmod +x /usr/local/bin/railway-entrypoint.sh
