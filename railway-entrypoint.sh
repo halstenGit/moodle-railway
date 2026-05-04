@@ -22,13 +22,11 @@ apache2ctl -M 2>/dev/null | grep mpm || true
 echo "SetEnvIf X-Forwarded-Proto https HTTPS=on" > /etc/apache2/conf-available/railway-proxy.conf
 a2enconf railway-proxy >/dev/null 2>&1 || true
 
-# Copia o config.php para o volume se ainda nao existir
-if [ ! -f /var/www/moodledata/config.php ]; then
-  echo "Copiando config.php para o volume..."
-  cp /var/www/html/theme/halsten/config.moodle.php /var/www/moodledata/config.php
-  chown www-data:www-data /var/www/moodledata/config.php
-  echo "config.php salvo no volume!"
-fi
+# Sempre atualiza o config.php no volume com a versão mais recente
+echo "Atualizando config.php no volume..."
+cp /var/www/html/theme/halsten/config.moodle.php /var/www/moodledata/config.php
+chown www-data:www-data /var/www/moodledata/config.php
+echo "config.php atualizado!"
 
 # Restaura o config.php do volume para o Moodle
 if [ -f /var/www/moodledata/config.php ] && [ ! -f /var/www/html/config.php ]; then
