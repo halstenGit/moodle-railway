@@ -22,23 +22,20 @@ apache2ctl -M 2>/dev/null | grep mpm || true
 echo "SetEnvIf X-Forwarded-Proto https HTTPS=on" > /etc/apache2/conf-available/railway-proxy.conf
 a2enconf railway-proxy >/dev/null 2>&1 || true
 
-# Instalação automática do Moodle se ainda não foi instalado
-# Instalação automática do Moodle se ainda não foi instalado
-ADMIN_PASS="${MOODLE_ADMIN_PASS:-IN\$0luc0#\$TI}"
-ADMIN_EMAIL="${MOODLE_ADMIN_EMAIL:-suporte@halsten.com.br}"
+# Copia o config.php para o Moodle se ainda nao existir no volume
+if [ ! -f /var/www/moodledata/config.php ]; then
+  echo "Copiando config.php para o volume..."
+  cp /var/www/html/theme/halsten/../../../moodle-theme/config.moodle.php /var/www/moodledata/config.php
+  chown www-data:www-data /var/www/moodledata/config.php
+  echo "config.php salvo no volume!"
+fi
 
-if [ ! -f /var/www/moodledata/moodle_is_installed ]; then
-  echo "Iniciando instalação automática do Moodle..."
-  sudo -u www-data php /var/www/html/admin/cli/install_database.php \
-    --agree-license \
-    --fullname="Halsten Academy" \
-    --shortname="halsten" \
-    --adminuser=admin \
-    --adminpass="${ADMIN_PASS}" \
-    --adminemail="${ADMIN_EMAIL}" \
-    --non-interactive \
-    && touch /var/www/moodledata/moodle_is_installed \
-    && echo "Moodle instalado com sucesso!"
+# Linka o config.php do volume para o Moodle
+if [ -f /var/www/moodledata/config.php ] && [ ! -f /var/www/html/config.php ]; then
+  echo "Restaurando config.php do volume..."
+  cp /var/www/moodledata/config.php /var/www/html/config.php
+  chown www-data:www-data /var/www/html/config.php
+  echo "config.php restaurado!"
 fi
 
 # Start the original entrypoint + Apache
