@@ -21,4 +21,4 @@ $CFG->admin     = 'admin';
 
 $CFG->directorypermissions = 0777;
 
-require_once(__DIR__ . '/../lib/setup.php');
+require_once('/var/www/html/lib/setup.php');
