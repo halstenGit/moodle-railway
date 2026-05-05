@@ -4,15 +4,15 @@ unset($CFG);
 global $CFG;
 $CFG = new stdClass();
 
-$CFG->dbtype    = 'pgsql';
+$$CFG->dbtype    = 'pgsql';
 $CFG->dblibrary = 'native';
 $CFG->dbhost    = 'postgres.railway.internal';
-$CFG->dbname    = getenv('PGDATABASE');
-$CFG->dbuser    = getenv('PGUSER');
-$CFG->dbpass    = getenv('PGPASSWORD');
+$CFG->dbname    = $_ENV['PGDATABASE'] ?? getenv('PGDATABASE');
+$CFG->dbuser    = $_ENV['PGUSER'] ?? getenv('PGUSER');
+$CFG->dbpass    = $_ENV['PGPASSWORD'] ?? getenv('PGPASSWORD');
 $CFG->prefix    = 'mdl_';
 $CFG->dboptions = [
-    'dbport' => getenv('PGPORT') ?: 5432,
+    'dbport' => (int)($_ENV['PGPORT'] ?? getenv('PGPORT') ?? 5432),
 ];
 
 $CFG->wwwroot   = 'https://moodle-production-3e05.up.railway.app';
