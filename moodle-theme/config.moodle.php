@@ -1,10 +1,8 @@
 <?php  // Moodle configuration file
 
-unset($CFG);
-global $CFG;
 $CFG = new stdClass();
 
-$$CFG->dbtype    = 'pgsql';
+$CFG->dbtype    = 'pgsql';
 $CFG->dblibrary = 'native';
 $CFG->dbhost    = 'postgres.railway.internal';
 $CFG->dbname    = $_ENV['PGDATABASE'] ?? getenv('PGDATABASE');
